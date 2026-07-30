@@ -1,18 +1,20 @@
 import { StateGraph, StateSchema, START, END, type GraphNode, type CompiledStateGraph } from "@langchain/langgraph"
+import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import z from "zod";
-import {  cohereModel, geminiModel, mistralAIModel } from "./model.ai.js";
+import { cohereModel, geminiModel, mistralAIModel } from "./model.ai.js";
 import { createAgent, HumanMessage, providerStrategy } from "langchain";
 
 const state = new StateSchema({
     problem: z.string().default(""),
     solution_1: z.string().default(""),
     solution_2: z.string().default(""),
+    judge_provider: z.string().default("gemini"),
     judge: z.object({
         solution_1_score: z.number().default(0),
         solution_2_score: z.number().default(0),
         solution_1_reasoning: z.string().default(""),
         solution_2_reasoning: z.string().default(""),
-    })
+    }).optional()
 })
 
 
@@ -24,16 +26,23 @@ const solutionNode: GraphNode<typeof state> = async (state) => {
     ])
 
     return {
-        solution_1: mistralResponse.text,
-        solution_2: cohereResponse.text,
+        solution_1: mistralResponse.content as string,
+        solution_2: cohereResponse.content as string,
     }
 }
 
 const judgeNode: GraphNode<typeof state> = async (state) => {
-    const { problem, solution_1, solution_2 } = state
+    const { problem, solution_1, solution_2, judge_provider } = state
+
+    let judgeModel: BaseChatModel = geminiModel;
+    if (judge_provider === "mistral") {
+        judgeModel = mistralAIModel;
+    } else if (judge_provider === "cohere") {
+        judgeModel = cohereModel;
+    }
 
     const judge = createAgent({
-        model: geminiModel,
+        model: judgeModel,
         responseFormat: providerStrategy(z.object({
             solution_1_score: z.number().min(0).max(10),
             solution_2_score: z.number().min(0).max(10),
@@ -80,12 +89,12 @@ const graph = new StateGraph(state)
     .addEdge("judge_node", END)
     .compile()
 
-export default async function (problem: string) { 
+export default async function (problem: string, judge_provider: string = "gemini") {
 
-    const result = await graph.invoke({
-        problem: problem
-    })
+    const stream = graph.streamEvents({
+        problem,
+        judge_provider
+    }, { version: "v2" })
 
-    return result
-
+    return stream
 }
