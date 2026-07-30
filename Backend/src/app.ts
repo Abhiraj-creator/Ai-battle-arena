@@ -8,12 +8,18 @@ import { ChatHistory } from "./models/ChatHistory.model.js";
 import { User } from "./models/User.model.js";
 import { authMiddleware, getOptionalUser } from "./middleware/auth.middleware.js";
 import type { AuthenticatedRequest } from "./middleware/auth.middleware.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -191,6 +197,14 @@ app.delete("/api/history/:id", authMiddleware, async (req: AuthenticatedRequest,
         console.error("Error deleting history item:", error);
         res.status(500).json({ error: error.message });
     }
+});
+
+// Catch-all route to serve the built frontend app
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/stream')) {
+        return next();
+    }
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 export default app;

@@ -34,7 +34,7 @@ export default function ChatInterface() {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const res = await fetch("http://localhost:3000/api/auth/me", {
+        const res = await fetch("/api/auth/me", {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -62,7 +62,7 @@ export default function ChatInterface() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:3000/api/history", {
+      const res = await fetch("/api/history", {
         headers: { 
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
@@ -146,7 +146,7 @@ export default function ChatInterface() {
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      const response = await fetch("http://localhost:3000/stream", {
+      const response = await fetch("/stream", {
         method: "POST",
         headers,
         body: JSON.stringify({ input: problemText, judge_provider: judgeProvider })
@@ -226,7 +226,7 @@ export default function ChatInterface() {
     e.stopPropagation();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:3000/api/history/${id}`, {
+      const res = await fetch(`/api/history/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`

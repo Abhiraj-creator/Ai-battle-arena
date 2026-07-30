@@ -18,8 +18,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
 
     try {
       const endpoint = mode === 'signup' 
-        ? "http://localhost:3000/api/auth/register" 
-        : "http://localhost:3000/api/auth/login";
+        ? "/api/auth/register" 
+        : "/api/auth/login";
 
       const body = mode === 'signup'
         ? { name, email, password }
