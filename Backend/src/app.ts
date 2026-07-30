@@ -200,11 +200,10 @@ app.delete("/api/history/:id", authMiddleware, async (req: AuthenticatedRequest,
 });
 
 // Catch-all route to serve the built frontend app
-app.get('*', (req, res, next) => {
+app.get('*splat', (req, res, next) => {
     if (req.path.startsWith('/api') || req.path.startsWith('/stream')) {
         return next();
     }
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
-
 export default app;
