@@ -28,6 +28,24 @@ export declare const ChatHistory: mongoose.Model<ChatHistory, {}, {}, {
     }, "id"> & mongoose.HydratedDocumentOverrides<{
         id: string;
     }>>;
+    battleId?: mongoose.SchemaDefinitionProperty<string, ChatHistory, mongoose.Document<unknown, {}, ChatHistory, {
+        id: string;
+    }, mongoose.DefaultSchemaOptions> & Omit<ChatHistory & {
+        _id: mongoose.Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & mongoose.HydratedDocumentOverrides<{
+        id: string;
+    }>>;
+    turnIndex?: mongoose.SchemaDefinitionProperty<number, ChatHistory, mongoose.Document<unknown, {}, ChatHistory, {
+        id: string;
+    }, mongoose.DefaultSchemaOptions> & Omit<ChatHistory & {
+        _id: mongoose.Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & mongoose.HydratedDocumentOverrides<{
+        id: string;
+    }>>;
     problem?: mongoose.SchemaDefinitionProperty<string, ChatHistory, mongoose.Document<unknown, {}, ChatHistory, {
         id: string;
     }, mongoose.DefaultSchemaOptions> & Omit<ChatHistory & {

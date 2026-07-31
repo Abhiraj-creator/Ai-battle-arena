@@ -1,0 +1,1 @@
+{"version":3,"file":"stream.routes.js","sourceRoot":"","sources":["../../../src/routes/stream.routes.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,SAAS,CAAC;AACjC,OAAO,EAAE,gBAAgB,EAAE,MAAM,qCAAqC,CAAC;AACvE,OAAO,EAAE,cAAc,EAAE,MAAM,kCAAkC,CAAC;AAElE,MAAM,MAAM,GAAG,MAAM,EAAE,CAAC;AAExB,MAAM,CAAC,IAAI,CAAC,GAAG,EAAE,cAAc,EAAE,gBAAgB,CAAC,CAAC;AAEnD,eAAe,MAAM,CAAC"}

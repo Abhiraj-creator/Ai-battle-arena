@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Lock, Mail, User, ArrowRight, Loader2 } from 'lucide-react';
+import { authenticate, saveAuth } from '../api/auth';
 
 export default function AuthModal({ isOpen, onClose, onSuccess }) {
   const [mode, setMode] = useState('signin'); // 'signin' or 'signup'
@@ -17,31 +18,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
     setLoading(true);
 
     try {
-      const endpoint = mode === 'signup' 
-        ? "/api/auth/register" 
-        : "/api/auth/login";
-
-      const body = mode === 'signup'
-        ? { name, email, password }
-        : { email, password };
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || `Failed to ${mode === 'signup' ? 'sign up' : 'sign in'}`);
-        setLoading(false);
-        return;
-      }
-
-      // Store JWT token and user info
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      const data = await authenticate(mode, { name, email, password });
+      saveAuth(data);
 
       setLoading(false);
       if (onSuccess) onSuccess(data.user);
