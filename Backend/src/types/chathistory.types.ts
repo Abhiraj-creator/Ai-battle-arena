@@ -1,5 +1,9 @@
 export default interface ChatHistory {
     userId?: string;
+    /** Groups multiple turns under a single battle session */
+    battleId: string;
+    /** Zero-based position of this turn within the battle */
+    turnIndex: number;
     problem: string;
     solution_1: string;
     solution_2: string;
@@ -11,4 +15,4 @@ export default interface ChatHistory {
         solution_2_reasoning: string;
     };
     createdAt?: Date;
-}
+}
