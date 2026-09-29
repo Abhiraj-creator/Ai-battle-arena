@@ -6,7 +6,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import historyRoutes from "./routes/history.routes.js";
 import streamRoutes from "./routes/stream.routes.js";
-
+import type { Request, Response } from "express";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,7 +26,9 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/stream", streamRoutes);
-
+app.get('/healthz', (req: Request, res: Response) => {
+    res.json({ status: "app is running" })
+})
 app.get("*splat", (req, res, next) => {
     if (req.path.startsWith("/api") || req.path.startsWith("/stream")) {
         next();
